@@ -39,6 +39,30 @@
             transform: scale(1.1);
             background-color: #ff4500;
         }
+        .admin-panel {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #ff6600;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff4500;
+        }
     </style>
 </head>
 <body>
@@ -51,14 +75,19 @@
         <p>Jika terdapat sebarang masalah, sila hubungi kami di <b>support@ebookplatform.com</b></p>
     </div>
     
+    <div class="admin-panel">
+        <h2>Admin Panel - Tambah eBook</h2>
+        <input type="text" id="ebookTitle" placeholder="Tajuk eBook">
+        <input type="text" id="ebookFile" placeholder="URL eBook">
+        <button onclick="addEbook()">Tambah eBook</button>
+    </div>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Dapatkan parameter dari URL
             const urlParams = new URLSearchParams(window.location.search);
             const ebook = urlParams.get("ebook");
             
-            // Tetapkan pautan muat turun berdasarkan eBook yang dibeli
-            let downloadLinks = {
+            let downloadLinks = JSON.parse(localStorage.getItem("ebooks")) || {
                 "asasseni": "ebooks/asas-seni-visual.pdf",
                 "senipenceritaan": "ebooks/seni-penceritaan.pdf"
             };
@@ -69,6 +98,20 @@
                 document.getElementById("downloadSection").innerHTML = "<p>Maaf, eBook tidak ditemui. Sila hubungi sokongan.</p>";
             }
         });
+        
+        function addEbook() {
+            let title = document.getElementById("ebookTitle").value;
+            let file = document.getElementById("ebookFile").value;
+            
+            if (title && file) {
+                let ebooks = JSON.parse(localStorage.getItem("ebooks")) || {};
+                ebooks[title.toLowerCase().replace(/\s+/g, '')] = file;
+                localStorage.setItem("ebooks", JSON.stringify(ebooks));
+                alert("eBook berjaya ditambah!");
+            } else {
+                alert("Sila isi semua maklumat.");
+            }
+        }
     </script>
 </body>
 </html>
